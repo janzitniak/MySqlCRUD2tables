@@ -1,10 +1,10 @@
-package sk.tmconsulting.crud2tabulky.model;
+package sk.tmconsulting.crud2tables.model;
 
 public class Employee {
     private int id;
     private String name;
     private int age;
-    private int departmentID;
+    private int departmentId;
     private Department department;
 
     public int getId() {
@@ -31,12 +31,12 @@ public class Employee {
         this.age = age;
     }
 
-    public int getDepartmentID() {
-        return departmentID;
+    public int getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartmentID(int departmentID) {
-        this.departmentID = departmentID;
+    public void setDepartmentId(int departmentID) {
+        this.departmentId = departmentID;
     }
 
     public Department getDepartment() {
@@ -45,6 +45,16 @@ public class Employee {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", department=" + department +
+                '}';
     }
 }
 

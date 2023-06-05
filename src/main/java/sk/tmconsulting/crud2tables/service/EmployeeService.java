@@ -1,11 +1,15 @@
-package sk.tmconsulting.crud2tabulky.model;
+package sk.tmconsulting.crud2tables.service;
+
+import sk.tmconsulting.crud2tables.model.Department;
+import sk.tmconsulting.crud2tables.model.Employee;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class EmployeeService {
     private Connection conn;
 
-    public void setCon() throws SQLException {
+    public void setConnection() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/company_db";
         String username = "root";
         String password = "password";
@@ -17,19 +21,22 @@ public class EmployeeService {
         PreparedStatement statement = conn.prepareStatement(insertQuery);
         statement.setString(1, employee.getName());
         statement.setInt(2, employee.getAge());
-        statement.setInt(3, employee.getDepartmentID());
+        statement.setInt(3, employee.getDepartment().getId());
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
-            System.out.println("Nový záznam bol úspešne vytvorený.");
+            System.out.println("Nový EMPLOYEE / ZAMESTNANEC bol úspešne vytvorený.");
         }
     }
 
     public Employee readEmployeeById(int id) throws SQLException {
-        String selectQuery = "SELECT employee.id AS employee_id, employee.name AS employee_name, employee.age, department.id AS deparment_id, department.name AS department_name" +
+        String selectQuery = "SELECT employee.id AS employee_id, employee.name AS employee_name, employee.age, department.id AS deparment_id, department.name AS department_name " +
                 "FROM employee " +
-                "INNER JOIN department ON employee.department_id = department.id WHERE employee.id = " + id;
+                "INNER JOIN department ON employee.department_id = department.id WHERE employee.id = ?";
+
 
         PreparedStatement statement = conn.prepareStatement(selectQuery);
+        statement.setInt(1, id);
+
         ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.next()) {
@@ -47,7 +54,7 @@ public class EmployeeService {
 
             Department department = new Department();
             department.setId(departmentId);
-            department.setDepartmentName(departmentName);
+            department.setName(departmentName);
 
             employee.setDepartment(department);
             return employee;
@@ -80,15 +87,18 @@ public class EmployeeService {
         }
     }
 
-    public Employee readEmployeeByName(String name) throws SQLException {
-        String selectQuery = "SELECT employee.id AS employee_id, employee.name AS employee_name, employee.age, department.id AS deparment_id, department.department_name AS department_name" +
+    public ArrayList<Employee> getEmployeesByName(String name) throws SQLException {
+        String selectQuery = "SELECT employee.id AS employee_id, employee.name AS employee_name, employee.age, department.id AS deparment_id, department.name AS department_name " +
                 "FROM employee " +
-                "INNER JOIN department ON employee.department_id = department.id WHERE employee.name LIKE = '%" + name +"%'" ;
+                "INNER JOIN department ON employee.department_id = department.id WHERE employee.name LIKE ?" ;
 
         PreparedStatement statement = conn.prepareStatement(selectQuery);
+        statement.setString(1, "%" + name + "%");
+
         ResultSet resultSet = statement.executeQuery();
 
-        if (resultSet.next()) {
+        ArrayList<Employee> foundEmployees = new ArrayList<>();
+        while (resultSet.next()) {
             int employeeID = resultSet.getInt("employee_id");
             String employeeName = resultSet.getString("employee_name");
             int employeeAge = resultSet.getInt("age");
@@ -103,12 +113,13 @@ public class EmployeeService {
 
             Department department = new Department();
             department.setId(departmentId);
-            department.setDepartmentName(departmentName);
+            department.setName(departmentName);
 
             employee.setDepartment(department);
-            return employee;
+
+            foundEmployees.add(employee);
         }
-        return null;
+        return foundEmployees;
     }
 
 }
