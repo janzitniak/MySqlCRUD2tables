@@ -1,17 +1,17 @@
 import sk.tmconsulting.crud2tables.model.Department;
-import sk.tmconsulting.crud2tables.service.DepartmentService;
+import sk.tmconsulting.crud2tables.repository.DepartmentRepository;
 import sk.tmconsulting.crud2tables.model.Employee;
-import sk.tmconsulting.crud2tables.service.EmployeeService;
+import sk.tmconsulting.crud2tables.repository.EmployeeRepository;
 
 import java.sql.SQLException;
 
 public class MySqlCRUD2tablesMain {
     public static void main(String[] args) {
 
-        // Vytvorenie DepartmentService, aby sme napojili na databazu a pracovali s CRUD operaciami
-        DepartmentService departmentService = new DepartmentService();
+        // Vytvorenie DepartmentRepository, aby sme napojili na databazu a pracovali s CRUD operaciami
+        DepartmentRepository departmentRepository = new DepartmentRepository();
         try {
-            departmentService.setConnection(); // Pripojenie na databazu
+            departmentRepository.setConnection(); // Pripojenie na databazu
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -19,8 +19,8 @@ public class MySqlCRUD2tablesMain {
         // Ziskanie Department
         Department department = null;
         try {
-            department = departmentService.readDepartmentById(1);
-            //department = departmentService.readDepartmentByName("IT Oddelenie");
+            department = departmentRepository.readDepartmentById(1);
+            //department = departmentRepository.readDepartmentByName("IT Oddelenie");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -33,16 +33,16 @@ public class MySqlCRUD2tablesMain {
         employee1.setDepartment(department);
 
         // Vytvorenie EmployeeService, aby sme napojili na databazu a pracovali s CRUD operaciami
-        EmployeeService employeeService = new EmployeeService();
+        EmployeeRepository employeeRepository = new EmployeeRepository();
         try {
-            employeeService.setConnection(); // Pripojenie na databazu
+            employeeRepository.setConnection(); // Pripojenie na databazu
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         // Vytvorenie Employee
         try {
-            employeeService.createEmployee(employee1);
+            employeeRepository.createEmployee(employee1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -50,8 +50,8 @@ public class MySqlCRUD2tablesMain {
         // Nacitanie Employee
         Employee employeeFromDatabase;
         try {
-            employeeFromDatabase = employeeService.readEmployeeById(1);
-            //employeeService.getEmployeesByName("John");
+            employeeFromDatabase = employeeRepository.readEmployeeById(1);
+            //employeeRepository.getEmployeesByName("John");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -66,8 +66,8 @@ public class MySqlCRUD2tablesMain {
         /*
         ArrayList<Employee> employeesFromDatabase;
         try {
-            employeesFromDatabase = employeeService.getEmployeesByName("ll");
-            //employeeService.getEmployeesByName("John");
+            employeesFromDatabase = employeeRepository.getEmployeesByName("ll");
+            //employeeRepository.getEmployeesByName("John");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +86,7 @@ public class MySqlCRUD2tablesMain {
         // Aktualizacia Employee
 /*        employee.setAge(35);
         try {
-            employeeService.updateEmployee(employee);
+            employeeRepository.updateEmployee(employee);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }*/
@@ -94,7 +94,7 @@ public class MySqlCRUD2tablesMain {
 
         // Odstranenie Employee
 /*        try {
-            employeeService.deleteEmployee(employee);
+            employeeRepository.deleteEmployee(employee);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }*/

@@ -1,4 +1,4 @@
-package sk.tmconsulting.crud2tables.service;
+package sk.tmconsulting.crud2tables.repository;
 
 import sk.tmconsulting.crud2tables.model.Department;
 import sk.tmconsulting.crud2tables.model.Employee;
@@ -6,7 +6,7 @@ import sk.tmconsulting.crud2tables.model.Employee;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class EmployeeService {
+public class EmployeeRepository {
     private Connection conn;
 
     public void setConnection() throws SQLException {

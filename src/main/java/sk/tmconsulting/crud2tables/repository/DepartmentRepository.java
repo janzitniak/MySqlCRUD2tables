@@ -1,10 +1,10 @@
-package sk.tmconsulting.crud2tables.service;
+package sk.tmconsulting.crud2tables.repository;
 
 import sk.tmconsulting.crud2tables.model.Department;
 
 import java.sql.*;
 
-public class DepartmentService {
+public class DepartmentRepository {
 
     private Connection conn;
 
