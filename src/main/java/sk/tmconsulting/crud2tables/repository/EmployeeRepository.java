@@ -29,8 +29,9 @@ public class EmployeeRepository {
     }
 
     public Employee readEmployeeById(int id) throws SQLException {
-        String selectQuery = "SELECT employee.id AS employee_id, employee.name AS employee_name, employee.age, department.id AS deparment_id, department.name AS department_name " +
-                "FROM employee " +
+        String selectQuery = "SELECT employee.id AS employee_id, employee.name AS employee_name, employee.age, " +
+                "department.id AS deparment_id, department.name AS department_name " +
+                "FROM employee" +
                 "INNER JOIN department ON employee.department_id = department.id WHERE employee.id = ?";
 
 
@@ -93,7 +94,7 @@ public class EmployeeRepository {
                 "INNER JOIN department ON employee.department_id = department.id WHERE employee.name LIKE ?" ;
 
         PreparedStatement statement = conn.prepareStatement(selectQuery);
-        statement.setString(1, "%" + name + "%");
+        statement.setString(1, "%" + name + "%"); // LIKE John%
 
         ResultSet resultSet = statement.executeQuery();
 
@@ -121,5 +122,37 @@ public class EmployeeRepository {
         }
         return foundEmployees;
     }
+
+    public ArrayList<Employee> getAllEmployees() throws SQLException {
+        String selectQuery = "SELECT employee.id, employee.name, employee.age, employee.department_id, department.name FROM employee INNER JOIN department ON employee.department_id=department.id";
+        PreparedStatement statement = conn.prepareStatement(selectQuery);
+        ResultSet resultSet = statement.executeQuery(); // Vykoname dane query
+
+        ArrayList<Employee> foundEmployees = new ArrayList<>();
+        while (resultSet.next()) { // resultSet.next() prechadza kazdym zaznamom, ktore sme ziskali query uvedenom vyssie
+            int employeeID = resultSet.getInt("employee.id");
+            String employeeName = resultSet.getString("employee.name");
+            int employeeAge = resultSet.getInt("employee.age");
+
+            int departmentId = resultSet.getInt("employee.department_id");
+            String departmentName = resultSet.getString("department.name");
+
+            Employee employee = new Employee(); // Tymto vytvarame vzdy prazdny objekt employee a nasledne ho vyplname
+            employee.setId(employeeID);
+            employee.setName(employeeName);
+            employee.setAge(employeeAge);
+
+            Department department = new Department();
+            department.setId(departmentId);
+            department.setName(departmentName);
+
+            employee.setDepartment(department);
+
+            foundEmployees.add(employee);
+        }
+        return foundEmployees;
+
+    }
+
 
 }
