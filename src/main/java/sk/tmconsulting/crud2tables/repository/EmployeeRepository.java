@@ -9,11 +9,17 @@ import java.util.ArrayList;
 public class EmployeeRepository {
     private Connection conn;
 
+    public EmployeeRepository() throws SQLException {
+        setConnection();
+    }
+
     public void setConnection() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/company_db";
         String username = "root";
         String password = "password";
-        conn = DriverManager.getConnection(url, username, password);
+        // Singleton pattern
+        if (conn == null)
+            conn = DriverManager.getConnection(url, username, password);
     }
 
     public void createEmployee(Employee employee) throws SQLException {
@@ -94,7 +100,7 @@ public class EmployeeRepository {
                 "INNER JOIN department ON employee.department_id = department.id WHERE employee.name LIKE ?" ;
 
         PreparedStatement statement = conn.prepareStatement(selectQuery);
-        statement.setString(1, "%" + name + "%"); // LIKE John%
+        statement.setString(1, "%" + name + "%"); // LIKE %John%
 
         ResultSet resultSet = statement.executeQuery();
 

@@ -7,6 +7,16 @@ public class Employee {
     private int departmentId;
     private Department department;
 
+    public Employee() {
+    }
+
+    public Employee(String name, int age, Department department) {
+        this.name = name;
+        this.age = age;
+        this.departmentId = department.getId();
+        this.department = department;
+    }
+
     public int getId() {
         return id;
     }
